@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron')
 const path = require('path')
 const menu = [
   {
@@ -59,7 +59,13 @@ app.on('window-all-closed', () => {
 })
 
 ipcMain.on('item:add', (e , data) => {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Item ajouté',
+    message: 'Bravo vous avez ajouté un item'
+  })
   w.webContents.send('item:add', data)
+  BrowserWindow.fromWebContents(e.sender).close();
 })
 
 if (process.env.NODE_ENV !== 'production') {
