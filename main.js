@@ -25,8 +25,10 @@ const createWidow = () => {
   const win = new BrowserWindow({
     fullscreen: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      preload: path.join(app.getAppPath(), 'view/preload-list.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false
     }
   })
   win.loadFile('index.html')
@@ -47,12 +49,14 @@ const createNewWindow = () => {
     width: 400,
     height: 400,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      preload:path.join(app.getAppPath(), 'view/preload-template.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false
     },
     parent: w
   })
-  win.loadFile('template.html')
+  win.loadFile('view/template.html')
 }
 
 app.on('window-all-closed', () => {

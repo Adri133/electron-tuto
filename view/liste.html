@@ -9,12 +9,6 @@
 <body>
   <h1>Liste</h1>
   <ul></ul>
-  <script>
-    const ipcRenderer = require('electron').ipcRenderer;
-    const ul = document.querySelector('ul')
-    ipcRenderer.on('item:add', (e, data) => (
-      ul.innerHTML = data
-    ))
-  </script>
+  <script src="renderer-list.js"></script>
 </body>
 </html>
