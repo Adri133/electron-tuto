@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain, dialog, Notification } = require('electron')
 const path = require('path')
 const menu = [
   {
@@ -20,6 +20,7 @@ const menu = [
     ]
   }
 ]
+
 const createWidow = () => {
   const win = new BrowserWindow({
     fullscreen: true,
@@ -58,14 +59,21 @@ app.on('window-all-closed', () => {
   if(process.platform !== 'darwin') app.quit()
 })
 
+
 ipcMain.on('item:add', (e , data) => {
-  dialog.showMessageBox({
-    type: 'info',
+  // dialog.showMessageBox({
+  //   type: 'info',
+  //   title: 'Item ajouté',
+  //   message: 'Bravo vous avez ajouté un item'
+  // })
+  const notif = new Notification({
     title: 'Item ajouté',
-    message: 'Bravo vous avez ajouté un item'
+    body: 'Bravo vous avez ajouté un item',
+    icon: 'assets/check_one_icon.png'
   })
   w.webContents.send('item:add', data)
-  BrowserWindow.fromWebContents(e.sender).close();
+  // BrowserWindow.fromWebContents(e.sender).close();
+  notif.show()
 })
 
 if (process.env.NODE_ENV !== 'production') {
