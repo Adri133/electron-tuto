@@ -100,6 +100,15 @@ ipcMain.on('item:add', (e , data) => {
   notif.show()
 })
 
+ipcMain.on('item:delete', (e, data) => {
+  items.deleteItem(data).then(
+    () => {
+      w.reload()
+    },
+    error => console.log(error)
+  )
+})
+
 if (process.env.NODE_ENV !== 'production') {
   menu.push({
     label: 'Developer Tools',
