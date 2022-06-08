@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog, Notification } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain, dialog, Notification, getCurrentWindow } = require('electron')
 const path = require('path')
 const database = require('./model/Database')
 const Item = require('./model/item')
@@ -87,7 +87,14 @@ ipcMain.on('item:add', (e , data) => {
     body: 'Bravo vous avez ajouté un item',
     icon: 'assets/check_one_icon.png'
   })
-  w.webContents.send('item:add', data)
+  items.addItems(data)
+  .then(
+    () => {
+      w.webContents.send('item:add', data)
+      w.reload()
+    },
+    error => console.log(error)
+  )
 
   // BrowserWindow.fromWebContents(e.sender).close();
   notif.show()
