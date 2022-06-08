@@ -1,5 +1,7 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, Notification } = require('electron')
 const path = require('path')
+const database = require('./model/Database')
+const db = new database('list.db')
 const menu = [
   {
     label : 'File',
@@ -23,15 +25,16 @@ const menu = [
 
 const createWidow = () => {
   const win = new BrowserWindow({
-    fullscreen: true,
+    width: 800,
+    height: 600,
     webPreferences: {
-      preload: path.join(app.getAppPath(), 'view/preload-list.js'),
+      preload: path.join(app.getAppPath(), 'script/preload-list.js'),
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false
     }
   })
-  win.loadFile('index.html')
+  win.loadFile('template/index.html')
   return win
 }
 let w
@@ -49,20 +52,34 @@ const createNewWindow = () => {
     width: 400,
     height: 400,
     webPreferences: {
-      preload:path.join(app.getAppPath(), 'view/preload-template.js'),
+      preload:path.join(app.getAppPath(), 'script/preload-template.js'),
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false
     },
     parent: w
   })
-  win.loadFile('view/template.html')
+  win.loadFile('template/template.html')
 }
 
 app.on('window-all-closed', () => {
   if(process.platform !== 'darwin') app.quit()
 })
 
+ipcMain.on('item:read', (e, data) => {
+  
+  let co = db.connect()
+  co.all("SELECT * FROM Item", function(err,rows){
+    if(err) {
+      console.log(err);
+    } else {
+
+    console.log(rows);
+    e.reply('async:item:read', rows)
+    co.close();
+    }
+});
+})
 
 ipcMain.on('item:add', (e , data) => {
   // dialog.showMessageBox({
@@ -76,6 +93,7 @@ ipcMain.on('item:add', (e , data) => {
     icon: 'assets/check_one_icon.png'
   })
   w.webContents.send('item:add', data)
+
   // BrowserWindow.fromWebContents(e.sender).close();
   notif.show()
 })
@@ -98,3 +116,4 @@ if (process.env.NODE_ENV !== 'production') {
     ]
   })
 }
+
