@@ -1,7 +1,9 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, Notification } = require('electron')
 const path = require('path')
 const database = require('./model/Database')
+const Item = require('./model/item')
 const db = new database('list.db')
+const items = new Item(db)
 const menu = [
   {
     label : 'File',
@@ -67,18 +69,11 @@ app.on('window-all-closed', () => {
 })
 
 ipcMain.on('item:read', (e, data) => {
-  
-  let co = db.connect()
-  co.all("SELECT * FROM Item", function(err,rows){
-    if(err) {
-      console.log(err);
-    } else {
-
-    console.log(rows);
-    e.reply('async:item:read', rows)
-    co.close();
+  items.getItems().then(
+    data => {
+      w.webContents.send('async:item:read', data)
     }
-});
+  )
 })
 
 ipcMain.on('item:add', (e , data) => {
