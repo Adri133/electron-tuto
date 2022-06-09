@@ -1,9 +1,11 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, Notification, getCurrentWindow } = require('electron')
 const path = require('path')
 const database = require('./model/Database')
-const Item = require('./model/item')
+const Item = require('./model/Item')
+const List = require('./model/List')
 const db = new database('list.db')
 const items = new Item(db)
+const lists = new List(db)
 const menu = [
   {
     label : 'File',
@@ -76,9 +78,16 @@ app.on('window-all-closed', () => {
 })
 
 ipcMain.on('item:read', (e, data) => {
-  items.getItems().then(
+  items.getItems(data).then(
     data => {
       w.webContents.send('async:item:read', data)
+    }
+  )
+})
+ipcMain.on('list:read', (e, data) => {
+  lists.getList().then(
+    data => {
+      w.webContents.send('async:list:read', data)
     }
   )
 })

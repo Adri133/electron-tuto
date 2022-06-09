@@ -4,9 +4,9 @@ class Item {
     this.db = db.connect()
   }
 
-  getItems() {
+  getItems(id) {
     return new Promise((resolve, reject) => {
-      this.db.all("SELECT * FROM Item", (err,rows) =>{
+      this.db.all("SELECT * FROM Item WHERE Item_FK_2="+ id, (err,rows) =>{
         if(err) {
           console.log(err);
           reject(err)

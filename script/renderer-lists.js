@@ -1,22 +1,19 @@
 window.addEventListener('DOMContentLoaded', async () => {
   const ul = document.querySelector('ul')
-  window.item.receive('async:item:read', (data)=> {
+  window.item.send('list:read','List')
+  window.item.receive('async:list:read', (data)=> {
     for (let i = 0; i < data.length; i++) {
       const li = document.createElement('li')
-      const bDelete = createButton(data[i], 'delete')
-      const bUpdate = createButton(data[i], 'update')
+      const bmore = createButton(data[i].id)
       li.innerText = data[i].libelle
-      li.appendChild(bUpdate)
-      li.appendChild(bDelete)
       ul.appendChild(li)
     }
   });
-
-  function createButton(item, label) {
+  function createButton(id) {
     const b = document.createElement('button')
-    b.innerText = label
+    b.innerText = 'voir +'
     b.addEventListener('click', () => {
-      window.item.send('item:'+ label, item)
+      window.item.send('item:read', id)
     })
     return b
   }
