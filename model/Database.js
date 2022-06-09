@@ -9,7 +9,7 @@ class Database {
     try {
       return new sqlite3.Database(this.name)
     } catch (e) {
-      console.log(e);
+      return e
     }
   }
 }
