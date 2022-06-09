@@ -4,13 +4,15 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^19.0.3"
+    "electron": "^19.0.3",
+    "jest": "^28.1.1"
   },
   "dependencies": {
     "sqlite3": "^5.0.8"
