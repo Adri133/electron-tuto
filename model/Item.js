@@ -7,14 +7,29 @@ class Item {
   getItems() {
     return new Promise((resolve, reject) => {
       this.db.all("SELECT * FROM Item", (err,rows) =>{
-      if(err) {
-        console.log(err);
-        reject(err)
-      } else {
-        resolve(rows)
-      }
-  })});
+        if(err) {
+          console.log(err);
+          reject(err)
+        } else {
+          resolve(rows)
+        }
+      })
+    });
   }
+
+  // getItem(data) {
+  //   console.log('item : ',data);
+  //   return new Promise((resolve, reject) => {
+  //     const stmt = this.db.prepare("SELECT * FROM Item WHERE id =(?)")
+  //     stmt.run(data, (err,rows) => {
+  //       if(err) {
+  //         reject(err)
+  //       } else {
+  //         resolve(rows)
+  //       }
+  //     })
+  //   });
+  // }
 
   addItems(data) {
     return new Promise((resolve, reject) => {
@@ -32,7 +47,20 @@ class Item {
   deleteItem(data) {
     return new Promise((resolve, reject) => {
       const stmt = this.db.prepare("DELETE FROM Item WHERE id = ?")
-      stmt.run(data, (err,rows) => {
+      stmt.get(data, (err,rows) => {
+        if(err) {
+          reject(err)
+        } else {
+          resolve(rows)
+        }
+      })
+    })
+  }
+
+  updateItem(data) {
+    return new Promise((resolve, reject) => {
+      const stmt = this.db.prepare("UPDATE Item SET libelle=? WHERE id="+ data.id)
+      stmt.run(data.libelle, (err,rows) => {
         if(err) {
           reject(err)
         } else {

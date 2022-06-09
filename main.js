@@ -11,7 +11,11 @@ const menu = [
       {
         label: 'New item',
         click() {
-          createNewWindow()
+          if (win) {
+            win.show()
+          } else {
+            createNewWindow()
+          }
         }
       },
       {
@@ -42,6 +46,8 @@ const createWidow = () => {
 let w
 app.whenReady().then(()=> {
   w = createWidow()
+  win = createNewWindow()
+  win.hide()
   app.on('activate', () => {
     if(BrowserWindow.getAllWindows().length === 0) createWindow()
   })
@@ -62,6 +68,7 @@ const createNewWindow = () => {
     parent: w
   })
   win.loadFile('template/template.html')
+  return win
 }
 
 app.on('window-all-closed', () => {
@@ -101,9 +108,24 @@ ipcMain.on('item:add', (e , data) => {
 })
 
 ipcMain.on('item:delete', (e, data) => {
-  items.deleteItem(data).then(
+  items.deleteItem(data.id).then(
     () => {
       w.reload()
+    },
+    error => console.log(error)
+  )
+})
+
+ipcMain.on('item:update', (e, data) => {
+  win.show()
+  win.webContents.send('async:update', data)
+})
+
+ipcMain.on('item:update:persist', (e, data) => {
+  items.updateItem(data).then(
+    () => {
+      w.reload()
+      win.hide()
     },
     error => console.log(error)
   )
@@ -122,7 +144,8 @@ if (process.env.NODE_ENV !== 'production') {
         }
       }, 
       {
-        role: 'reload'
+        role: 'reload',
+        accelerator:'F5'
       }
     ]
   })

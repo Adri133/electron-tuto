@@ -4,18 +4,20 @@ window.addEventListener('DOMContentLoaded', async () => {
   window.item.receive('async:item:read', (data)=> {
     for (let i = 0; i < data.length; i++) {
       const li = document.createElement('li')
-      const button = createButton(data[i].id)
+      const bDelete = createButton(data[i], 'delete')
+      const bUpdate = createButton(data[i], 'update')
       li.innerText = data[i].libelle
-      li.appendChild(button)
+      li.appendChild(bUpdate)
+      li.appendChild(bDelete)
       ul.appendChild(li)
     }
   });
 
-  function createButton(id) {
+  function createButton(item, label) {
     const b = document.createElement('button')
-    b.innerText = 'Supprimer'
+    b.innerText = label
     b.addEventListener('click', () => {
-      window.item.send('item:delete', id)
+      window.item.send('item:'+ label, item)
     })
     return b
   }
