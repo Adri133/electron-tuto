@@ -17,20 +17,6 @@ class Item {
     });
   }
 
-  // getItem(data) {
-  //   console.log('item : ',data);
-  //   return new Promise((resolve, reject) => {
-  //     const stmt = this.db.prepare("SELECT * FROM Item WHERE id =(?)")
-  //     stmt.run(data, (err,rows) => {
-  //       if(err) {
-  //         reject(err)
-  //       } else {
-  //         resolve(rows)
-  //       }
-  //     })
-  //   });
-  // }
-
   addItems(data) {
     return new Promise((resolve, reject) => {
       const stmt = this.db.prepare("INSERT INTO Item (libelle) VALUES (?)")
